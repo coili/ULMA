@@ -2,9 +2,9 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import github3
-import time
 
 from ulma.utils import Utils
+from time import sleep
 
 class Endpoint:
 
@@ -33,7 +33,6 @@ class Endpoint:
         else:
             self.set_endpoint()
             return "Error: can't connect to Internet."
-            
     
     def handle_command(self, command):
         if command != self.last_command:
@@ -48,7 +47,7 @@ class Endpoint:
             else:
                 self.get_repo()
 
-            time.sleep(10)
+            sleep(10)
 
     def upload_result(self, result):
         if self.repo is not None:

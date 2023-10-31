@@ -8,10 +8,7 @@ from ulma.utils import Utils
 
 if __name__ == "__main__":
 
-    mode = Utils().get_mode()
     endpoint = Endpoint()
 
     receive_command_process = Process(target=endpoint.receive_command)
     receive_command_process.start()
-
-    #endpoint.receive_command()
