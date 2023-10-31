@@ -13,6 +13,5 @@ if __name__ == "__main__":
 
     receive_command_process = Process(target=endpoint.receive_command)
     receive_command_process.start()
-    receive_command_process.join()
 
     #endpoint.receive_command()
