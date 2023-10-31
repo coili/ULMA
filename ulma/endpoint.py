@@ -3,9 +3,9 @@ from __future__ import print_function
 
 import github3
 
+from time import sleep
 from ulma.utils import Utils
 from ulma.system import System
-from time import sleep
 
 class Endpoint:
 
